@@ -1,0 +1,65 @@
+﻿@model SavePoliticalLeaderAssignmentViewModel
+@{
+    ViewData["Title"] = "New Assignment";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mb-4">
+    <h4 class="fw-semibold mb-0">New Leader Assignment</h4>
+    <small class="text-muted">Link a political leader to a political party.</small>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 540px;">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label fw-medium">Political Leader</label>
+                <select name="IdentityUserId" class="form-select">
+                    <option value="">-- Select a leader --</option>
+                    @if (ViewBag.AvailableLeaders != null)
+                    {
+                        foreach (var leader in ViewBag.AvailableLeaders)
+                        {
+                            <option value="@leader.Id">@leader.Name @leader.LastName (@leader.UserName)</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="IdentityUserId" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-medium">Political Party</label>
+                <select name="PoliticalPartyId" class="form-select">
+                    <option value="">-- Select a party --</option>
+                    @if (ViewBag.AvailableParties != null)
+                    {
+                        foreach (var party in ViewBag.AvailableParties)
+                        {
+                            <option value="@party.PoliticalPartyId">@party.Name [@party.Acronym]</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="PoliticalPartyId" class="text-danger small"></span>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger py-2 mb-3">
+                    <ul class="mb-0 ps-3">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li class="small">@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="d-flex gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                <button type="submit" class="btn btn-dark">Create Assignment</button>
+            </div>
+        </form>
+    </div>
+</div>

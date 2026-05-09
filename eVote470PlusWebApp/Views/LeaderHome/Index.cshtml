@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_LeaderLayout.cshtml";
+    var party = ViewBag.Party as PoliticalPartyViewModel;
+}
+@using eVote470Plus.Core.Application.ViewModels.Political.PoliticalParty
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Leader Dashboard</h4>
+        <small class="text-muted">Overview of your political party</small>
+    </div>
+</div>
+
+<!-- Party Info -->
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body d-flex align-items-center gap-4 p-4">
+        @if (party != null && !string.IsNullOrEmpty(party.LogoUrl))
+        {
+            <img src="@party.LogoUrl" alt="@party.Name logo"
+                 style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; border: 2px solid #dee2e6; padding: 6px; background: #f8f9fa;" />
+        }
+        else
+        {
+            <div class="d-flex align-items-center justify-content-center bg-light rounded-circle border"
+                 style="width: 80px; height: 80px;">
+                <span class="material-symbols-outlined text-muted" style="font-size: 36px;">flag</span>
+            </div>
+        }
+        <div>
+            <h5 class="fw-bold mb-0">@party?.Name <span class="badge bg-dark">@party?.Acronym</span></h5>
+            @if (!string.IsNullOrEmpty(party?.Description))
+            {
+                <p class="text-muted mb-0 small">@party.Description</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Indicators -->
+<div class="row g-3">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="mb-2">
+                <span class="material-symbols-outlined text-success" style="font-size: 32px;">person_check</span>
+            </div>
+            <h3 class="fw-bold mb-0">@ViewBag.ActiveCandidates</h3>
+            <small class="text-muted">Active Candidates</small>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="mb-2">
+                <span class="material-symbols-outlined text-secondary" style="font-size: 32px;">person_off</span>
+            </div>
+            <h3 class="fw-bold mb-0">@ViewBag.InactiveCandidates</h3>
+            <small class="text-muted">Inactive Candidates</small>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="mb-2">
+                <span class="material-symbols-outlined text-primary" style="font-size: 32px;">handshake</span>
+            </div>
+            <h3 class="fw-bold mb-0">@ViewBag.AllianceCount</h3>
+            <small class="text-muted">Active Alliances</small>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="mb-2">
+                <span class="material-symbols-outlined text-warning" style="font-size: 32px;">pending</span>
+            </div>
+            <h3 class="fw-bold mb-0">@ViewBag.PendingRequestCount</h3>
+            <small class="text-muted">Pending Requests</small>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="mb-2">
+                <span class="material-symbols-outlined text-dark" style="font-size: 32px;">assignment_turned_in</span>
+            </div>
+            <h3 class="fw-bold mb-0">@ViewBag.AssignedCandidateCount</h3>
+            <small class="text-muted">Candidates Assigned to Position</small>
+        </div>
+    </div>
+</div>

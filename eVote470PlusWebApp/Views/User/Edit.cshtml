@@ -1,0 +1,68 @@
+﻿@model EditApplicationUserViewModel
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mb-4">
+    <h4 class="fw-semibold mb-0">Edit User</h4>
+    <small class="text-muted">Update the user's information.</small>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width:540px;">
+    <div class="card-body p-4">
+
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+
+            <input asp-for="Id" type="hidden" />
+
+            <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Last Name</label>
+                <input asp-for="LastName" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input asp-for="UserName" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">
+                    Password (leave blank to keep current)
+                </label>
+                <input asp-for="Password" type="password" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Role</label>
+                <select asp-for="Role" class="form-select">
+                    <option value="Administrator">Administrator</option>
+                    <option value="PoliticalLeader">Political Leader</option>
+                </select>
+            </div>
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <button class="btn btn-dark">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+
+        </form>
+
+    </div>
+</div>

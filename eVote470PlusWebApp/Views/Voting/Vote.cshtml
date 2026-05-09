@@ -1,0 +1,98 @@
+﻿@model CandidateSelectionViewModel
+@{
+    ViewData["Title"] = "Cast Your Vote";
+    Layout = "~/Views/Shared/_VotingLayout.cshtml";
+    int citizenId = (int)ViewBag.CitizenId;
+    int electionId = (int)ViewBag.ElectionId;
+}
+
+<div class="mb-4">
+    <a asp-action="Positions" asp-controller="Voting" asp-route-citizenId="@citizenId"
+       class="text-muted small">← Back to positions</a>
+    <h4 class="fw-semibold mt-2 mb-0">@Model.PoliticalPositionName</h4>
+    <small class="text-muted">Select one candidate and submit your vote</small>
+</div>
+
+<form asp-action="Vote" asp-controller="Voting" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="citizenId" value="@citizenId" />
+    <input type="hidden" name="electionId" value="@electionId" />
+    <input type="hidden" asp-for="PoliticalPositionId" />
+
+    <div class="row g-3 mb-4">
+        @foreach (var candidate in Model.Candidates)
+        {
+            <div class="col-12 col-sm-6 col-lg-4">
+                <label class="w-100 h-100" style="cursor: pointer;">
+                    <input type="radio"
+                           asp-for="SelectedCandidateId"
+                           value="@candidate.CandidateId"
+                           class="d-none candidate-radio" />
+                    <div class="card border-0 shadow-sm h-100 candidate-card p-3 text-center">
+
+                        @if (candidate.CandidateId == 0)
+                        {
+                            <div class="d-flex align-items-center justify-content-center bg-light rounded-circle mx-auto mb-3"
+                                 style="width: 72px; height: 72px;">
+                                <span class="material-symbols-outlined text-muted" style="font-size: 36px;">block</span>
+                            </div>
+                            <h6 class="fw-bold mb-1">None</h6>
+                            <small class="text-muted">Blank vote</small>
+                        }
+                        else
+                        {
+                            @if (!string.IsNullOrEmpty(candidate.PhotoUrl))
+                            {
+                                <img src="@candidate.PhotoUrl" alt="@candidate.Name"
+                                     style="width: 72px; height: 72px; object-fit: cover; border-radius: 50%;"
+                                     class="mx-auto mb-3 border d-block" />
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center justify-content-center bg-light rounded-circle mx-auto mb-3 border"
+                                     style="width: 72px; height: 72px;">
+                                    <span class="material-symbols-outlined text-muted" style="font-size: 36px;">person</span>
+                                </div>
+                            }
+                            <h6 class="fw-bold mb-1">@candidate.Name @candidate.LastName</h6>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                @if (!string.IsNullOrEmpty(candidate.PartyLogoUrl))
+                                {
+                                    <img src="@candidate.PartyLogoUrl" alt="@candidate.PartyName"
+                                         style="width: 28px; height: 28px; object-fit: contain; border-radius: 50%; border: 1px solid #dee2e6; padding: 2px; background: #f8f9fa;" />
+                                }
+                                <small class="text-muted">@candidate.PartyName</small>
+                            </div>
+                        }
+                    </div>
+                </label>
+            </div>
+        }
+    </div>
+
+    <div class="d-flex gap-2">
+        <a asp-action="Positions" asp-controller="Voting" asp-route-citizenId="@citizenId"
+           class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary fw-semibold">Submit Vote</button>
+    </div>
+</form>
+
+<style>
+    .candidate-card {
+        border: 2px solid transparent !important;
+        transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .candidate-radio:checked + .candidate-card {
+        border-color: #0d6efd !important;
+        background-color: #f0f5ff;
+    }
+
+    .candidate-card:hover {
+        border-color: #aac4ff !important;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

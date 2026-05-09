@@ -1,0 +1,97 @@
+﻿@model List<CandidateViewModel>
+@{
+    ViewData["Title"] = "Candidates";
+    Layout = "~/Views/Shared/_LeaderLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Candidates</h4>
+        <small class="text-muted">Manage your party's candidates</small>
+    </div>
+    @if (!(bool)ViewBag.HasActiveElection)
+    {
+        <a asp-action="Create" class="btn btn-primary">+ New Candidate</a>
+    }
+</div>
+
+@if ((bool)ViewBag.HasActiveElection)
+{
+    <div class="alert alert-warning">
+        There is an active election. Candidates cannot be created, edited or have their status changed.
+    </div>
+}
+
+<div class="row g-3">
+    @if (!Model.Any())
+    {
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center text-muted py-5">
+                    No candidates registered for your party.
+                </div>
+            </div>
+        </div>
+    }
+    @foreach (var candidate in Model)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+
+                    <!-- Photo -->
+                    <div class="text-center mb-3">
+                        @if (!string.IsNullOrEmpty(candidate.PhotoUrl))
+                        {
+                            <img src="@candidate.PhotoUrl" alt="@candidate.Name"
+                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%;"
+                                 class="border" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center bg-light rounded-circle border mx-auto"
+                                 style="width: 80px; height: 80px;">
+                                <span class="material-symbols-outlined text-muted" style="font-size: 36px;">person</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Info -->
+                    <div class="text-center mb-2">
+                        <h6 class="fw-bold mb-1">@candidate.Name @candidate.LastName</h6>
+                        <span class="badge bg-dark small">@candidate.PoliticalPartyPosition</span>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="text-center mb-3">
+                        @if (candidate.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactive</span>
+                        }
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-auto d-flex justify-content-center gap-2">
+                        @if (!(bool)ViewBag.HasActiveElection)
+                        {
+                            <a asp-action="Edit" asp-route-id="@candidate.CandidateId"
+                               class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-action="ChangeStatus" asp-route-id="@candidate.CandidateId"
+                               class="btn btn-sm @(candidate.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                                @(candidate.IsActive ? "Deactivate" : "Activate")
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted small">Not available</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,84 @@
+﻿@model List<CitizenViewmodel>
+@{
+    ViewData["Title"] = "Citizens";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Citizens</h4>
+        <small class="text-muted">Manage registered citizens</small>
+    </div>
+    @if (!(bool)ViewBag.HasActiveElection)
+    {
+        <a asp-action="Create" class="btn btn-dark">+ New Citizen</a>
+    }
+</div>
+
+@if ((bool)ViewBag.HasActiveElection)
+{
+    <div class="alert alert-warning">
+        There is an active election. Citizens cannot be created, edited or have their status changed.
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Document Number</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No citizens registered.</td>
+                        </tr>
+                    }
+                    @foreach (var citizen in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@citizen.Name</td>
+                            <td class="align-middle">@citizen.LastName</td>
+                            <td class="align-middle text-muted">@citizen.Email</td>
+                            <td class="align-middle">@citizen.DocumentNumber</td>
+                            <td class="text-center align-middle">
+                                @if (citizen.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td class="text-center align-middle">
+                                @if (!(bool)ViewBag.HasActiveElection)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@citizen.CitizenId"
+                                       class="btn btn-sm btn-outline-dark me-1">Edit</a>
+                                    <a asp-action="ChangeStatus" asp-route-id="@citizen.CitizenId"
+                                       class="btn btn-sm @(citizen.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                                        @(citizen.IsActive ? "Deactivate" : "Activate")
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">Not available</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

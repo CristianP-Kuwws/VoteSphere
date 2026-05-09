@@ -1,0 +1,74 @@
+﻿@model SaveCandidatePositionViewModel
+
+@{
+    ViewData["Title"] = "New Assignment";
+    Layout = "~/Views/Shared/_LeaderLayout.cshtml";
+
+    var availableCandidates = ViewBag.AvailableCandidates as List<CandidateViewModel>;
+    var availablePositions = ViewBag.AvailablePositions as List<PoliticalPositionDto>;
+}
+
+<div class="mb-4">
+    <h4 class="fw-semibold mb-0">New Assignment</h4>
+    <small class="text-muted">Assign a candidate to an electoral position.</small>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 540px;">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="PoliticalPartyId" type="hidden" />
+
+            <div class="mb-3">
+                <label class="form-label fw-medium">Candidate</label>
+                <select name="CandidateId" class="form-select">
+                    <option value="">-- Select a candidate --</option>
+                    @if (availableCandidates != null)
+                    {
+                        foreach (var candidate in availableCandidates)
+                        {
+                            <option value="@candidate.CandidateId">
+                                @candidate.Name @candidate.LastName
+                            </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="CandidateId" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-medium">Electoral Position</label>
+                <select name="PoliticalPositionId" class="form-select">
+                    <option value="">-- Select a position --</option>
+                    @if (availablePositions != null)
+                    {
+                        foreach (var position in availablePositions)
+                        {
+                            <option value="@position.PoliticalPositionId">
+                                @position.Name
+                            </option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="PoliticalPositionId" class="text-danger small"></span>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger py-2 mb-3">
+                    <ul class="mb-0 ps-3">
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li class="small">@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="d-flex gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                <button type="submit" class="btn btn-primary">Create Assignment</button>
+            </div>
+        </form>
+    </div>
+</div>

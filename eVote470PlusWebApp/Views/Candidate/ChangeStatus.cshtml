@@ -1,0 +1,47 @@
+﻿@model CandidateViewModel
+@{
+    ViewData["Title"] = Model.IsActive ? "Deactivate Candidate" : "Activate Candidate";
+    Layout = "~/Views/Shared/_LeaderLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="card border-0 shadow-sm" style="max-width: 480px; width: 100%;">
+        <div class="card-body p-4 text-center">
+
+            <div class="mb-3">
+                @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+                {
+                    <img src="@Model.PhotoUrl" alt="@Model.Name"
+                         style="width: 72px; height: 72px; object-fit: cover; border-radius: 50%;"
+                         class="border" />
+                }
+                else
+                {
+                    <span class="material-symbols-outlined @(Model.IsActive ? "text-danger" : "text-success")"
+                          style="font-size: 48px;">
+                        @(Model.IsActive ? "remove_circle" : "check_circle")
+                    </span>
+                }
+            </div>
+
+            <h5 class="fw-semibold mb-1">@Model.Name @Model.LastName</h5>
+            <p class="text-muted small mb-3">@Model.PoliticalPartyPosition</p>
+            <p class="text-muted mb-4">
+                @(Model.IsActive
+                                ? "Are you sure you want to deactivate this candidate? They will no longer appear as a voting option."
+                                : "Are you sure you want to activate this candidate?")
+            </p>
+
+            <div class="d-flex justify-content-center gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <form asp-action="ChangeStatus" asp-route-id="@Model.CandidateId" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="currentStatus" value="@Model.IsActive" />
+                    <button type="submit" class="btn @(Model.IsActive ? "btn-danger" : "btn-success")">
+                        @(Model.IsActive ? "Yes, deactivate" : "Yes, activate")
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

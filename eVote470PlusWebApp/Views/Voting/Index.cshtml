@@ -1,0 +1,54 @@
+﻿@model VoterIdentityViewModel
+@{
+    ViewData["Title"] = "Vote";
+    Layout = "~/Views/Shared/_VotingLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="col-12 col-sm-8 col-md-5 col-lg-4">
+
+        <div class="text-center mb-4">
+            <span class="material-symbols-outlined text-primary" style="font-size: 56px; font-variation-settings: 'FILL' 1;">how_to_vote</span>
+            <h4 class="fw-semibold mt-2 mb-1">Electoral Voting Portal</h4>
+            <p class="text-muted small">Enter your document number to begin</p>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger py-2">
+                        <ul class="mb-0 ps-3">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li class="small">@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <form asp-action="Index" asp-controller="Voting" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="DocumentNumber" class="form-label fw-medium">Document Number</label>
+                        <input asp-for="DocumentNumber" class="form-control form-control-lg"
+                               placeholder="00000000000" maxlength="11" />
+                        <span asp-validation-for="DocumentNumber" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                            Vote
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

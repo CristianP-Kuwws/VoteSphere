@@ -1,0 +1,74 @@
+﻿@model List<VotingPositionViewModel>
+@{
+    ViewData["Title"] = "Select Position";
+    Layout = "~/Views/Shared/_VotingLayout.cshtml";
+    int citizenId = (int)ViewBag.CitizenId;
+    int electionId = (int)ViewBag.ElectionId;
+    bool allVoted = (bool)ViewBag.AllVoted;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="fw-semibold mb-0">Electoral Positions</h4>
+        <small class="text-muted">Select a position to cast your vote</small>
+    </div>
+    @if (allVoted)
+    {
+        <a asp-action="Finish" asp-controller="Voting" asp-route-citizenId="@citizenId"
+           class="btn btn-success fw-semibold">
+            <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">check_circle</span>
+            Finish Voting
+        </a>
+    }
+</div>
+
+<div class="row g-3">
+    @foreach (var position in Model)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            @if (position.AlreadyVoted)
+            {
+                <div class="card border-0 shadow-sm h-100 opacity-75">
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h6 class="fw-bold mb-0">@position.Name</h6>
+                            <span class="badge bg-success">
+                                <span class="material-symbols-outlined" style="font-size: 14px;">check</span>
+                                Voted
+                            </span>
+                        </div>
+                        <div class="text-muted small mt-auto">
+                            <span>@position.CandidateCount candidate(s)</span>
+                            <span class="mx-1">·</span>
+                            <span>@position.PartyCount party(ies)</span>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <a asp-action="Vote" asp-controller="Voting"
+                   asp-route-citizenId="@citizenId"
+                   asp-route-positionId="@position.PoliticalPositionId"
+                   class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 border-start border-primary border-3">
+                        <div class="card-body d-flex flex-column p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="fw-bold mb-0 text-dark">@position.Name</h6>
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            </div>
+                            <div class="text-muted small mt-auto">
+                                <span>@position.CandidateCount candidate(s)</span>
+                                <span class="mx-1">·</span>
+                                <span>@position.PartyCount party(ies)</span>
+                            </div>
+                            <div class="mt-2">
+                                <span class="btn btn-sm btn-primary w-100">Select →</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+</div>

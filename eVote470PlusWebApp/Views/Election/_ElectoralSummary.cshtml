@@ -1,0 +1,88 @@
+﻿@model List<ElectionViewModel>
+@{
+    ViewData["Title"] = "Elections by Year";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Elections — @ViewBag.SelectedYear</h4>
+        <small class="text-muted">Overview of electoral activity</small>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th class="text-center">Parties</th>
+                        <th class="text-center">Positions</th>
+                        <th class="text-center">Turnout</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                No elections registered for this year.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var election in Model)
+                        {
+                            <tr class="@(election.IsActive ? "table-success" : "")">
+
+                                <td class="fw-medium">
+                                    @election.Name
+                                    @if (election.IsActive)
+                                    {
+                                        <span class="badge bg-success ms-1">Active</span>
+                                    }
+                            </td>
+
+                            <td class="text-center">
+                                <span class="badge bg-dark">
+                                    @(election.ParticipantPoliticalPartiesCount ?? 0)
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="badge bg-secondary">
+                                    @(election.PoliticalPositionsCount ?? 0)
+                                </span>
+                            </td>
+
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border">
+                                    @(election.VoterTurnoutPercentage.HasValue
+                                                                    ? election.VoterTurnoutPercentage.Value.ToString("0.##") + "%"
+                                                                    : "N/A")
+                            </span>
+                        </td>
+
+                                <td class="text-center">
+                            @if (election.IsActive)
+                                    {
+                                        <span class="badge bg-success">In Progress</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Finished</span>
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+﻿@model SaveCitizenViewModel
+@{
+    bool isEdit = ViewBag.IsEdit == true;
+    ViewData["Title"] = isEdit ? "Edit Citizen" : "New Citizen";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="mb-4">
+    <h4 class="fw-semibold mb-0">@ViewData["Title"]</h4>
+    <small class="text-muted">@(isEdit ? "Update the citizen's information." : "Fill in the fields to register a new citizen.")</small>
+</div>
+
+<div class="card border-0 shadow-sm" style="max-width: 540px;">
+    <div class="card-body p-4">
+        <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+            @Html.AntiForgeryToken()
+
+            @if (isEdit)
+            {
+                <input asp-for="CitizenId" type="hidden" />
+            }
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-medium">First Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter first name" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="LastName" class="form-label fw-medium">Last Name</label>
+                <input asp-for="LastName" class="form-control" placeholder="Enter last name" />
+                <span asp-validation-for="LastName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label fw-medium">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="example@email.com" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="DocumentNumber" class="form-label fw-medium">Document Number</label>
+                <input asp-for="DocumentNumber" class="form-control" placeholder="00000000000" maxlength="11" />
+                <span asp-validation-for="DocumentNumber" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                <button type="submit" class="btn btn-dark">
+                    @(isEdit ? "Save Changes" : "Create Citizen")
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

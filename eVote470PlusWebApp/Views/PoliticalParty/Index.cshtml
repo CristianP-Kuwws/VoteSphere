@@ -1,0 +1,100 @@
+﻿@model List<PoliticalPartyViewModel>
+@{
+    ViewData["Title"] = "Political Parties";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Political Parties</h4>
+        <small class="text-muted">Manage registered political parties</small>
+    </div>
+    @if (!(bool)ViewBag.HasActiveElection)
+    {
+        <a asp-action="Create" class="btn btn-dark">+ New Party</a>
+    }
+</div>
+
+@if ((bool)ViewBag.HasActiveElection)
+{
+    <div class="alert alert-warning">
+        There is an active election. Political parties cannot be created, edited or have their status changed.
+    </div>
+}
+
+<div class="row g-3">
+    @if (!Model.Any())
+    {
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center text-muted py-5">
+                    No political parties registered.
+                </div>
+            </div>
+        </div>
+    }
+    @foreach (var party in Model)
+    {
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+
+                    <!-- Logo -->
+                    <div class="text-center mb-3">
+                        @if (!string.IsNullOrEmpty(party.LogoUrl))
+                        {
+                            <img src="@party.LogoUrl" alt="@party.Name logo"
+                                 style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%; border: 2px solid #dee2e6; padding: 6px; background: #f8f9fa;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center bg-light rounded-circle border mx-auto"
+                                 style="width: 80px; height: 80px;">
+                                <span class="material-symbols-outlined text-muted" style="font-size: 36px;">flag</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Info -->
+                    <div class="text-center mb-3">
+                        <h6 class="fw-bold mb-0">@party.Name</h6>
+                        <span class="badge bg-dark mb-1">@party.Acronym</span>
+                        @if (!string.IsNullOrEmpty(party.Description))
+                        {
+                            <p class="text-muted small mb-0">@party.Description</p>
+                        }
+                    </div>
+
+                    <!-- Status -->
+                    <div class="text-center mb-3">
+                        @if (party.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactive</span>
+                        }
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-auto d-flex justify-content-center gap-2">
+                        @if (!(bool)ViewBag.HasActiveElection)
+                        {
+                            <a asp-action="Edit" asp-route-id="@party.PoliticalPartyId"
+                               class="btn btn-sm btn-outline-dark">Edit</a>
+                            <a asp-action="ChangeStatus" asp-route-id="@party.PoliticalPartyId"
+                               class="btn btn-sm @(party.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                                @(party.IsActive ? "Deactivate" : "Activate")
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted small">Not available</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,47 @@
+﻿@model PoliticalPositionViewModel
+@{
+    ViewData["Title"] = Model.IsActive ? "Deactivate Position" : "Activate Position";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="card border-0 shadow-sm" style="max-width: 480px; width: 100%;">
+        <div class="card-body p-4 text-center">
+
+            <div class="mb-3">
+                @if (Model.IsActive)
+                {
+                    <span class="material-symbols-outlined text-danger" style="font-size: 48px;">
+                        remove_circle
+                    </span>
+                }
+                else
+                {
+                    <span class="material-symbols-outlined text-success" style="font-size: 48px;">
+                        check_circle
+                    </span>
+                }
+            </div>
+
+            <h5 class="fw-semibold mb-2">
+                @(Model.IsActive ? "Deactivate this position?" : "Activate this position?")
+            </h5>
+            <p class="text-muted mb-4">
+                @(Model.IsActive
+                                ? $"Are you sure you want to deactivate the position \"{Model.Name}\"?"
+                                : $"Are you sure you want to activate the position \"{Model.Name}\"?")
+            </p>
+
+            <div class="d-flex justify-content-center gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <form asp-action="ChangeStatus" asp-route-id="@Model.PoliticalPositionId" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="currentStatus" value="@Model.IsActive" />
+                    <button type="submit" class="btn @(Model.IsActive ? "btn-danger" : "btn-success")">
+                        @(Model.IsActive ? "Yes, deactivate" : "Yes, activate")
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

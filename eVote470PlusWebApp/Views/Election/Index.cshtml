@@ -1,0 +1,79 @@
+﻿@model List<ElectionViewModel>
+@{
+    ViewData["Title"] = "Elections";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    bool hasActiveElection = Model.Any(e => e.IsActive);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Elections</h4>
+        <small class="text-muted">Manage electoral processes</small>
+    </div>
+    @if (!hasActiveElection)
+    {
+        <a asp-action="Create" class="btn btn-dark">+ New Election</a>
+    }
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Election Date</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No elections registered.</td>
+                        </tr>
+                    }
+                    @foreach (var election in Model)
+                    {
+                        <tr class="@(election.IsActive ? "table-success" : "")">
+                            <td class="align-middle fw-medium">
+                                @election.Name
+                                @if (election.IsActive)
+                                {
+                                    <span class="badge bg-success ms-1">Active</span>
+                                }
+                            </td>
+                            <td class="align-middle text-muted">
+                                @election.ElectionDate.ToString("MMM dd, yyyy")
+                            </td>
+                            <td class="text-center align-middle">
+                                @if (election.IsActive)
+                                {
+                                    <span class="badge bg-success">In Progress</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Finalized</span>
+                                }
+                            </td>
+                            <td class="text-center align-middle">
+                                @if (election.IsActive)
+                                {
+                                    <a asp-action="Finalize" asp-route-id="@election.ElectionId"
+                                       class="btn btn-sm btn-outline-danger">Finalize</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Results" asp-route-id="@election.ElectionId"
+                                       class="btn btn-sm btn-outline-dark">View Results</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

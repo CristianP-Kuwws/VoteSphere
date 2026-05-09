@@ -1,0 +1,55 @@
+﻿@model VoterOCRViewModel
+@{
+    ViewData["Title"] = "Identity Validation";
+    Layout = "~/Views/Shared/_VotingLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="col-12 col-sm-8 col-md-5 col-lg-4">
+
+        <div class="text-center mb-4">
+            <span class="material-symbols-outlined text-primary" style="font-size: 56px; font-variation-settings: 'FILL' 1;">badge</span>
+            <h4 class="fw-semibold mt-2 mb-1">Identity Validation</h4>
+            <p class="text-muted small">Upload a photo of your ID card to continue</p>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+
+                <div class="alert alert-info small mb-3">
+                    <span class="material-symbols-outlined" style="font-size: 16px; vertical-align: middle;">info</span>
+                    Make sure the photo shows only the front of your ID, is well-lit and clearly readable.
+                </div>
+
+                <form asp-action="ValidateIdentity" asp-controller="Voting" method="post"
+                      enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="DocumentNumber" />
+
+                    <div class="mb-4">
+                        <label asp-for="DocumentPhoto" class="form-label fw-medium">ID Card Photo</label>
+                        <input asp-for="DocumentPhoto" class="form-control" type="file"
+                               accept="image/*" />
+                        <span asp-validation-for="DocumentPhoto" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary fw-semibold">
+                            Validate Identity
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center mt-3">
+            <a asp-action="Index" asp-controller="Voting" class="text-muted small">
+                ← Back to start
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

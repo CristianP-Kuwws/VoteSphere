@@ -1,0 +1,262 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | VoteSphere</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet" />
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+            background-image: radial-gradient(at 0% 0%, rgba(0, 81, 213, 0.06) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 81, 213, 0.04) 0px, transparent 50%);
+            min-height: 100vh;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .login-card {
+            border: 1px solid #c6c6cd;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .icon-shield {
+            width: 64px;
+            height: 64px;
+            background-color: #dce9ff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0051d5;
+            font-size: 32px;
+        }
+
+        .form-control {
+            background-color: #f8f9ff;
+            border-color: #c6c6cd;
+            padding: 0.65rem 0.85rem 0.65rem 2.75rem;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+            .form-control:focus {
+                border-color: #0051d5;
+                box-shadow: 0 0 0 3px rgba(0, 81, 213, 0.15);
+            }
+
+        .input-icon-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #76777d;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        .btn-access {
+            background-color: #000;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            padding: 0.7rem;
+            border-radius: 0.25rem;
+            border: none;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+            .btn-access:hover {
+                background-color: #2f2f2f;
+                color: #fff;
+            }
+
+        .navbar-brand-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0b1c30;
+            letter-spacing: -0.01em;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Navbar -->
+    <nav class="navbar bg-white border-bottom shadow-sm px-4">
+        <div class="container-fluid justify-content-between">
+
+            <span class="navbar-brand-text">
+                VoteSphere
+            </span>
+
+            <a asp-controller="Voting"
+               asp-action="Index"
+               class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+
+                <span class="material-symbols-outlined"
+                      style="font-size:18px;">
+                    arrow_back
+                </span>
+
+                Back
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
+
+        <div style="width: 100%; max-width: 440px;"
+             class="px-3">
+
+            <!-- Branding -->
+            <div class="text-center mb-4">
+
+                <div class="icon-shield mb-3 mx-auto">
+                    <span class="material-symbols-outlined"
+                          style="font-variation-settings: 'FILL' 1;">
+                        shield_lock
+                    </span>
+                </div>
+
+                <h2 style="font-size: 1.6rem; font-weight: 600; color: #0b1c30;"
+                    class="mb-1">
+                    Institutional Access
+                </h2>
+
+                <p class="text-muted mb-0"
+                   style="font-size: 0.95rem;">
+                    Enter your credentials to access the voting portal.
+                </p>
+            </div>
+
+            <!-- Card -->
+            <div class="login-card bg-white p-4">
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger py-2 mb-3"
+                         role="alert">
+
+                        <ul class="mb-0 ps-3">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li class="small">@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <form asp-action="Index"
+                      asp-controller="Login"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <!-- Username -->
+                    <div class="mb-3">
+
+                        <label asp-for="UserName"
+                               class="form-label fw-medium"
+                               style="font-size: 0.85rem; letter-spacing: 0.03em;">
+                            Username
+                        </label>
+
+                        <div class="input-icon-wrapper">
+
+                            <span class="material-symbols-outlined input-icon">
+                                person
+                            </span>
+
+                            <input asp-for="UserName"
+                                   class="form-control"
+                                   placeholder="Enter your username"
+                                   autocomplete="username" />
+                        </div>
+
+                        <span asp-validation-for="UserName"
+                              class="text-danger small">
+                        </span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+
+                        <label asp-for="Password"
+                               class="form-label fw-medium"
+                               style="font-size: 0.85rem; letter-spacing: 0.03em;">
+                            Password
+                        </label>
+
+                        <div class="input-icon-wrapper">
+
+                            <span class="material-symbols-outlined input-icon">
+                                lock
+                            </span>
+
+                            <input asp-for="Password"
+                                   class="form-control"
+                                   placeholder="••••••••••••"
+                                   autocomplete="current-password" />
+                        </div>
+
+                        <span asp-validation-for="Password"
+                              class="text-danger small">
+                        </span>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid">
+
+                        <button type="submit"
+                                class="btn btn-access d-flex align-items-center justify-content-center gap-2">
+
+                            <span>Access</span>
+
+                            <span class="material-symbols-outlined"
+                                  style="font-size: 18px;">
+                                arrow_forward
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-top py-3 text-center text-muted"
+            style="font-size: 0.78rem;">
+
+        &copy; @DateTime.Now.Year VoteSphere &mdash; Secure Institutional Voting System
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

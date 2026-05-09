@@ -1,0 +1,92 @@
+﻿@model List<ElectionResultViewModel>
+@using eVote470Plus.Core.Application.ViewModels.Political.Election
+@{
+    ViewData["Title"] = "Election Results";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Results — @ViewBag.ElectionName</h4>
+        <small class="text-muted">Final results by electoral position</small>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <span class="material-symbols-outlined">arrow_back</span> Back
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No votes were recorded for this election.</div>
+}
+
+@foreach (var position in Model)
+{
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white fw-semibold">
+            @position.PositionName
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Candidate</th>
+                            <th>Party</th>
+                            <th class="text-center">Votes</th>
+                            <th class="text-center">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int rank = 1;
+                        }
+                        @foreach (var candidate in position.Candidates)
+                        {
+                            <tr class="@(rank == 1 ? "table-success" : "")">
+                                <td class="align-middle text-muted">
+                                    @if (rank == 1)
+                                    {
+                                        <span class="material-symbols-outlined text-warning"
+                                              style="font-variation-settings: 'FILL' 1;">
+                                            emoji_events
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @rank
+                                    }
+                                </td>
+                                <td class="align-middle fw-medium">
+                                    @if (!string.IsNullOrEmpty(candidate.PhotoUrl))
+                                    {
+                                        <img src="@candidate.PhotoUrl" alt="@candidate.CandidateName"
+                                             style="width: 32px; height: 32px; object-fit: cover; border-radius: 50%;"
+                                             class="me-2 border" />
+                                    }
+                                    @candidate.CandidateName @candidate.CandidateLastName
+                                </td>
+                                <td class="align-middle">
+                                    <span class="badge bg-dark">@candidate.PartyAcronym</span>
+                                    <span class="text-muted small ms-1">@candidate.PartyName</span>
+                                </td>
+                                <td class="text-center align-middle fw-bold">@candidate.VoteCount</td>
+                                <td class="text-center align-middle">
+                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                        <div class="progress" style="width: 80px; height: 8px;">
+                                            <div class="progress-bar bg-success"
+                                                 style="width: @candidate.VotePercentage%"></div>
+                                        </div>
+                                        <span class="small">@candidate.VotePercentage.ToString("F1")%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            rank++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

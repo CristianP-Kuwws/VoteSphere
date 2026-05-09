@@ -1,0 +1,34 @@
+﻿@model PoliticalLeaderAssignmentViewModel
+@{
+    ViewData["Title"] = "Unlink Leader";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="card border-0 shadow-sm" style="max-width: 480px; width: 100%;">
+        <div class="card-body p-4 text-center">
+
+            <div class="mb-3">
+                <span class="material-symbols-outlined text-danger" style="font-size: 48px;">link_off</span>
+            </div>
+
+            <h5 class="fw-semibold mb-2">Unlink this leader?</h5>
+            <p class="text-muted mb-1">
+                <strong>@Model.UserName</strong>
+            </p>
+            <p class="text-muted mb-4">
+                Are you sure you want to unlink this political leader from party
+                <strong>@Model.PartyAcronym</strong>?
+            </p>
+
+            <div class="d-flex justify-content-center gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <form asp-action="Delete" asp-route-id="@Model.PoliticalLeaderId" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="currentStatus" value="true" />
+                    <button type="submit" class="btn btn-danger">Yes, unlink</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+﻿@model List<PoliticalPositionViewModel>
+@{
+    ViewData["Title"] = "Political Positions";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0 fw-semibold">Political Positions</h4>
+        <small class="text-muted">Management of positions available for elections</small>
+    </div>
+    @if (!(bool)ViewBag.HasActiveElection)
+    {
+        <a asp-action="Create" class="btn btn-dark">
+            + New Position
+        </a>
+    }
+</div>
+
+@if ((bool)ViewBag.HasActiveElection)
+{
+    <div class="alert alert-warning">
+        There is an active election. Political positions cannot be created, edited, or have their status changed.
+    </div>
+}
+
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No political positions registered.</td>
+                        </tr>
+                    }
+                    @foreach (var position in Model)
+                    {
+                        <tr>
+                            <td class="fw-medium align-middle">@position.Name</td>
+                            <td class="align-middle text-muted">@position.Description</td>
+                            <td class="text-center align-middle">
+                                @if (position.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td class="text-center align-middle">
+                                @if (!(bool)ViewBag.HasActiveElection)
+                                {
+                                    <a asp-action="Edit" asp-route-id="@position.PoliticalPositionId"
+                                       class="btn btn-sm btn-outline-dark me-1">Edit</a>
+                                    <a asp-action="ChangeStatus" asp-route-id="@position.PoliticalPositionId"
+                                       class="btn btn-sm @(position.IsActive ? "btn-outline-danger" : "btn-outline-success")">
+                                        @(position.IsActive ? "Deactivate" : "Activate")
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">Unavailable</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

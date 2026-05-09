@@ -1,0 +1,29 @@
+﻿@model PoliticalAllianceViewModel
+@{
+    ViewData["Title"] = "Accept Alliance";
+    Layout = "~/Views/Shared/_LeaderLayout.cshtml";
+}
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="card border-0 shadow-sm" style="max-width: 480px; width: 100%;">
+        <div class="card-body p-4 text-center">
+            <div class="mb-3">
+                <span class="material-symbols-outlined text-success" style="font-size: 48px;">handshake</span>
+            </div>
+            <h5 class="fw-semibold mb-2">Accept this alliance?</h5>
+            <p class="text-muted mb-4">
+                Are you sure you want to accept the alliance request from
+                <strong>@Model.SenderPartyName</strong>?
+                This will allow both parties to assign each other's candidates to positions.
+            </p>
+            <div class="d-flex justify-content-center gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                <form asp-action="Accept" asp-route-id="@Model.PoliticalAllianceId" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="confirm" value="true" />
+                    <button type="submit" class="btn btn-success">Yes, accept</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
