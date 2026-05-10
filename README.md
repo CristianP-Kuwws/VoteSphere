@@ -152,7 +152,45 @@ dotnet run --project eVote470PlusWebApp
 
 ## Screenshots
 
-> _Add screenshots of the login page, admin dashboard, voting flow, and results page here._
+### Login Page
+Institutional access page for administrators and political leaders.
+
+![Login Page](docs/images/Login.png)
+
+---
+
+### Voting Front Page
+Initial public voting portal where citizens enter their identity document number.
+
+![Voting Front Page](docs/images/votingFrontPage.png)
+
+---
+
+### Candidate Management
+Political leader interface for managing party candidates.
+
+![Candidate Management](docs/images/Candidates.png)
+
+---
+
+### Political Parties Management
+Administrative panel for managing political parties.
+
+![Political Parties Management](docs/images/PoliticalParties.png)
+
+---
+
+### Political Leader Dashboard
+Dashboard displaying party indicators and candidate-related information.
+
+![Political Leader Dashboard](docs/images/PoliticalLeaderDashboard.png)
+
+---
+
+### Election Results
+Election results page showing vote counts and percentages.
+
+![Election Results](docs/images/ElectionResult.png)
 
 ---
 
